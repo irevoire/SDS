@@ -2,7 +2,15 @@
 #include <stdio.h>
 #include "stif.h"
 
-const unsigned char picture[] = {0xCA, 0xFE, 10, 15, STIF_COLOR_TYPE_GRAYSCALE, 0, 0, 0, 0};
+const unsigned char picture[] = {
+	0xFE, 0xCA, // MAGIC
+
+	// HEADER
+	10, 0, 0, 0, // WIDTH
+	15, 0, 0, 0, // HEIGHT
+	STIF_COLOR_TYPE_RGB, // COLOR TYPE
+	0, 0, 0 // stif_header padding
+};
 
 int main(void)
 {
