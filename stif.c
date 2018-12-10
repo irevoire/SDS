@@ -1,5 +1,7 @@
 #include "stif.h"
+
 #include <stdio.h>
+#include <string.h>
 #include <stdint.h>
 
 
@@ -26,23 +28,15 @@ void stif_block_free(stif_block_t *b)
 
 stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 {
-	if (buffer_size < sizeof(stif_header_t))
+	if (buffer_size < sizeof(stif_header_t) + 2) // STIF_MAGIC
 		return NULL;
 
-	if ( ( (int16_t) *buffer) != (int16_t) STIF_MAGIC)
+	if ( ( *(int16_t *) buffer) != (int16_t) STIF_MAGIC)
 		return NULL;
-	buffer += 4;
+	buffer += 2;
 
 	stif_t *stif = malloc(sizeof(*stif));
-
-	stif->header.width = (int32_t) *buffer;
-	buffer += 4;
-
-	stif->header.height = (int32_t) *buffer;
-	buffer += 4;
-
-	stif->header.color_type = (int8_t) *buffer;
-	buffer++;
+	memcpy(&(stif->header), buffer, sizeof(stif->header));
 
 	return stif;
 }
