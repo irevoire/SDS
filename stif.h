@@ -99,4 +99,6 @@ void stif_block_free(stif_block_t *b);
  */
 stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size);
 
+void print_stif(stif_t *s);
+
 #endif
