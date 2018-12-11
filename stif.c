@@ -16,6 +16,10 @@ stif_block_t *read_stif_block(const unsigned char *buffer, size_t buffer_size, s
 {
 	stif_block_t *block = NULL;
 
+	// NOT ENOUGH BYTES TO READ -- 5 => sizeof(stif_block_t) without padding
+	if (*bytes_read + 5 > buffer_size)
+		return NULL;
+
 	block = malloc(sizeof(*block));
 
 	// GET THE TYPE
@@ -33,6 +37,7 @@ stif_block_t *read_stif_block(const unsigned char *buffer, size_t buffer_size, s
 	// GET THE DATA
 	block->data = malloc((size_t)block->block_size);
 	memcpy(block->data, buffer + *bytes_read, (size_t)block->block_size);
+	*bytes_read += (size_t)block->block_size;
 
 	// INIT NEXT
 	block->next = NULL;
@@ -42,7 +47,11 @@ stif_block_t *read_stif_block(const unsigned char *buffer, size_t buffer_size, s
 
 void stif_block_free(stif_block_t *b)
 {
-	printf("TODO");
+	if (b == NULL)
+		return;
+	if (b->data != NULL)
+		free(b->data);
+	free(b);
 }
 
 static int parse_stif_header(stif_header_t *header, stif_block_t *block)
@@ -107,8 +116,6 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 	else
 		goto error;
 
-	return stif;
-
 	for (stif_block_t *block = stif->block_head;
 			read < buffer_size;
 			block = block->next)
@@ -141,14 +148,25 @@ error:
 	return NULL;
 }
 
-void print_stif(stif_t *s)
+void print_stif(stif_t *stif)
 {
 	printf("==== PRINT STIF ====\n");
 	printf("== Header ==\n");
-	printf("width => %d\n", s->header.width);
-	printf("heigth => %d\n", s->header.height);
-	printf("color_type => %d\n", s->header.color_type);
+	printf("width => %d\n", stif->header.width);
+	printf("heigth => %d\n", stif->header.height);
+	printf("color_type => %d\n", stif->header.color_type);
+
+	printf("== BLOCKS ==\n");
+	for (stif_block_t *block = stif->block_head;
+			block != NULL;
+			block = block->next)
+	{
+		printf("type => %d\n", block->block_type);
+		printf("size => %d\n", block->block_size);
+		printf("data => ");
+		for (int32_t i = 0; i < block->block_size; i++)
+			printf("%x ", *(block->data + i));
+		printf("\n=============\n");
+	}
+	printf("\n");
 }
-
-
-
