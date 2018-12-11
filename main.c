@@ -30,5 +30,7 @@ int main(void)
 
 	print_stif(s);
 
+	stif_free(s);
+
 	return 0;
 }

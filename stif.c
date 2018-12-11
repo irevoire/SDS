@@ -4,11 +4,25 @@
 #include <string.h>
 #include <stdint.h>
 
+static void free_all_blocks(stif_block_t *block)
+{
+	if (block == NULL)
+		return;
+	if (block->data != NULL)
+		free(block->data);
+
+	free_all_blocks(block->next);
+	free(block);
+}
 
 void stif_free(stif_t *s)
 {
 	if (s == NULL)
 		return;
+	free_all_blocks(s->block_head);
+	free(s->grayscale_pixels);
+	free(s->rgb_pixels);
+
 	free(s);
 }
 
