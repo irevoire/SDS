@@ -14,7 +14,11 @@ const unsigned char picture[] = {
 	// BLOCK DATA
 	0x01, // BLOCK TYPE DATA
 	0x01, 0x00, 0x00, 0x00, // BLOCK SIZE
-	0xFF // PIXEL
+	0xFF, // PIXEL
+	// BLOCK DATA
+	0x01, // BLOCK TYPE DATA
+	0x03, 0x00, 0x00, 0x00, // BLOCK SIZE
+	0xCA, 0xCA, 0xCA // PIXEL
 };
 
 int main(void)
