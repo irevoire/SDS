@@ -13,4 +13,8 @@ endif
 $(info [*] Nb of CPUs: ${CPUS})
 MAKEFLAGS += --jobs=$(CPUS)
 
-CFLAGS += -Wall -Werror -Wextra -g
+WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
+            -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
+            -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
+            -Wconversion -Wstrict-prototypes
+CFLAGS := -g -std=gnu99 $(WARNINGS)
