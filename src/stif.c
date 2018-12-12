@@ -108,6 +108,9 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 	size_t pixel_read = 0, image_size = 0;
 	stif_t *stif = NULL;
 
+	if (buffer == NULL)
+		return NULL;
+
 	if (buffer_size < 2) // STIF_MAGIC
 		return NULL;
 
