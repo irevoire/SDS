@@ -197,36 +197,39 @@ END_TEST
 static Suite *parse_suite(void)
 {
 	Suite *s;
-	TCase *tc_core;
+	TCase *tc_parse_stif, *tc_read_stif;
 
-	s = suite_create("Parse");
+	s = suite_create("parse_stif");
 
-	/* Core test case */
-	tc_core = tcase_create("Core");
-	
 	// parse_stif_block
-	tcase_add_test(tc_core, read_stif_block_not_null);
-	tcase_add_test(tc_core, read_stif_block_increment_size);
-	tcase_add_test(tc_core, read_stif_block_check_type_DATA);
-	tcase_add_test(tc_core, read_stif_block_check_type_HEADER);
-	tcase_add_test(tc_core, read_stif_block_check_size);
-	tcase_add_test(tc_core, read_stif_block_check_pixel);
-	tcase_add_test(tc_core, read_stif_block_bad_buffer_size);
-	tcase_add_test(tc_core, read_stif_block_buffer_null);
+	tc_read_stif = tcase_create("read_stif");
+
+	tcase_add_test(tc_read_stif, read_stif_block_not_null);
+	tcase_add_test(tc_read_stif, read_stif_block_increment_size);
+	tcase_add_test(tc_read_stif, read_stif_block_check_type_DATA);
+	tcase_add_test(tc_read_stif, read_stif_block_check_type_HEADER);
+	tcase_add_test(tc_read_stif, read_stif_block_check_size);
+	tcase_add_test(tc_read_stif, read_stif_block_check_pixel);
+	tcase_add_test(tc_read_stif, read_stif_block_bad_buffer_size);
+	tcase_add_test(tc_read_stif, read_stif_block_buffer_null);
+
+	suite_add_tcase(s, tc_read_stif);
 
 	// parse_stif
-	tcase_add_test(tc_core, parse_stif_not_null);
-	tcase_add_test(tc_core, parse_stif_check_header);
-	tcase_add_test(tc_core, parse_stif_check_pixels);
-	tcase_add_test(tc_core, parse_stif_small_buffer);
-	tcase_add_test(tc_core, parse_stif_no_magic);
-	tcase_add_test(tc_core, parse_stif_null_buffer);
-	tcase_add_test(tc_core, parse_stif_first_block_is_data);
-	tcase_add_test(tc_core, parse_stif_two_headers);
-	tcase_add_test(tc_core, parse_stif_inconsistent_pixel_size);
-	tcase_add_test(tc_core, parse_stif_no_header);
+	tc_parse_stif = tcase_create("parse_stif");
 
-	suite_add_tcase(s, tc_core);
+	tcase_add_test(tc_parse_stif, parse_stif_not_null);
+	tcase_add_test(tc_parse_stif, parse_stif_check_header);
+	tcase_add_test(tc_parse_stif, parse_stif_check_pixels);
+	tcase_add_test(tc_parse_stif, parse_stif_small_buffer);
+	tcase_add_test(tc_parse_stif, parse_stif_no_magic);
+	tcase_add_test(tc_parse_stif, parse_stif_null_buffer);
+	tcase_add_test(tc_parse_stif, parse_stif_first_block_is_data);
+	tcase_add_test(tc_parse_stif, parse_stif_two_headers);
+	tcase_add_test(tc_parse_stif, parse_stif_inconsistent_pixel_size);
+	tcase_add_test(tc_parse_stif, parse_stif_no_header);
+
+	suite_add_tcase(s, tc_parse_stif);
 
 	return s;
 }
