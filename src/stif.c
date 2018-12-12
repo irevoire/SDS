@@ -154,12 +154,11 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 		block->next = read_stif_block(buffer, buffer_size, &read);
 		if (block->next == NULL)
 			goto error;
-		if (block->next->block_type == STIF_BLOCK_TYPE_DATA)
-		{
-			memcpy(pixel_progression, block->next->data, (size_t)block->next->block_size);
-			pixel_progression += block->next->block_size;
-			pixel_read += (size_t)block->next->block_size;
-		}
+		if (block->next->block_type != STIF_BLOCK_TYPE_DATA)
+			goto error;
+		memcpy(pixel_progression, block->next->data, (size_t)block->next->block_size);
+		pixel_progression += block->next->block_size;
+		pixel_read += (size_t)block->next->block_size;
 		if (block->next == NULL)
 			goto error;
 	}
