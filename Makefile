@@ -1,23 +1,24 @@
-CC := gcc
+# Main makefile
 
-WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
-            -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
-            -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
-            -Wconversion -Wstrict-prototypes
-CFLAGS := -g -std=gnu99 $(WARNINGS)
+SUBDIR = src regress
 
-EXE := main
+OBJDIR = obj
+BINDIR = bin
 
-all: $(EXE)
+all:
+	@for dir in ${SUBDIR} ; do \
+		echo "[*] Building subdir $$dir" ; \
+		$(MAKE) -C $$dir || exit ;\
+	done
 
-main: main.o stif.o
-	@$(CC) $(CFLAGS) $^ -o $@
+.PHONY: clean testu
 
-main.o: main.c
-	@$(CC) $(CFLAGS) -c $<
+testu:
+	$(MAKE) -C test test
 
-stif.o: stif.c stif.h
-	@$(CC) $(CFLAGS) -c $<
+regress-valgrind:
+	checkmate check --valgrind
 
 clean:
-	@rm -f *.o $(EXE)
+	@echo "[*] Cleaning"
+	rm -rf ${OBJDIR} ${BINDIR}

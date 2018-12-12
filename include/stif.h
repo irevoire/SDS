@@ -22,8 +22,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#define STIF_MAGIC_SIZE 2
 #define STIF_MAGIC 0xCAFE
 
+#define STIF_BLOCK_HEADER_SIZE 9
 typedef struct stif_header_s
 {
 	int32_t width;
@@ -93,12 +95,11 @@ void stif_block_free(stif_block_t *b);
  * This function reads a whole STIF file (magic, header and image data).
  * It will store the block in the block_head list and pixels as well (according to the color type).
  *
- * \param fd the file descriptor
+ * \param buffer the buffer
+ * \param buffer_size size of the buffer
  *
  * \return the parsed image (to be freed with stif_free) or NULL on error
  */
 stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size);
-
-void print_stif(stif_t *s);
 
 #endif
