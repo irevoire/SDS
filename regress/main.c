@@ -45,7 +45,7 @@ static unsigned char *read_file(const char *input_file, size_t *size)
 	}
 
 	fseek(file, 0, SEEK_END);
-	*size = ftell(file);
+	*size = (size_t)ftell(file);
 	fseek(file, 0, SEEK_SET);
 
 	data = malloc(*size);
@@ -92,7 +92,7 @@ static void dump_stif_image(const stif_t *s)
 	fprintf(stdout, "stif image:\n");
 	fprintf(stdout, "- width: %d\n", s->header.width);
 	fprintf(stdout, "- height: %d\n", s->header.height);
-	fprintf(stdout, "- type: %s\n", stif_color_type_to_str(s->header.color_type));
+	fprintf(stdout, "- type: %s\n", stif_color_type_to_str((uint8_t)s->header.color_type));
 
 	/* Counting blocks
 	 */
