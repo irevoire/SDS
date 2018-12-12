@@ -31,12 +31,28 @@ const unsigned char base_block[] = {
 //////////////////////////////////////////////////////////
 /////////////////// READ STIF BLOCK //////////////////////
 //////////////////////////////////////////////////////////
+START_TEST(read_stif_block_not_null){
+	stif_block_t *block = NULL;
+	size_t size = 0;
+	block = read_stif_block(base_block, sizeof(base_block), &size);
+	ck_assert(block != NULL);
+	stif_block_free(block);
+}
+END_TEST
+
 START_TEST(read_stif_block_bad_buffer_size){
 	stif_block_t *block = NULL;
 	size_t size = 2;
 	block = read_stif_block(base_block, sizeof(base_block), &size);
 	ck_assert(block == NULL);
-	ck_assert(size == 2);
+}
+END_TEST
+
+START_TEST(read_stif_block_buffer_null){
+	stif_block_t *block = NULL;
+	size_t size = 20;
+	block = read_stif_block(NULL, 10, &size);
+	ck_assert(block == NULL);
 }
 END_TEST
 
@@ -136,7 +152,9 @@ static Suite *parse_suite(void)
 	tc_core = tcase_create("Core");
 	
 	// parse_stif_block
+	tcase_add_test(tc_core, read_stif_block_not_null);
 	tcase_add_test(tc_core, read_stif_block_bad_buffer_size);
+	tcase_add_test(tc_core, read_stif_block_buffer_null);
 
 	// parse_stif
 	tcase_add_test(tc_core, parse_stif_not_null);
