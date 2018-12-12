@@ -116,12 +116,17 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 	read += 2;
 
 	stif = malloc(sizeof(*stif));
+	stif->block_head = NULL;
+	stif->grayscale_pixels = NULL;
+	stif->rgb_pixels = NULL;
+
 	stif->block_head = read_stif_block(buffer, buffer_size, &read);
 	if (stif->block_head == NULL)
 		goto error;
 
 	if (parse_stif_header(&(stif->header), stif->block_head))
 		goto error;
+
 
 	// malloc the pixels array with a size appropriate for the type
 	if (stif->header.color_type == STIF_COLOR_TYPE_GRAYSCALE)
