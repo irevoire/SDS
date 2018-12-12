@@ -30,8 +30,8 @@ stif_block_t *read_stif_block(const unsigned char *buffer, size_t buffer_size, s
 {
 	stif_block_t *block = NULL;
 
-	// NOT ENOUGH BYTES TO READ -- 5 => sizeof(stif_block_t) without padding
-	if (*bytes_read + 5 > buffer_size)
+	// NOT ENOUGH BYTES TO READ
+	if (*bytes_read + STIF_BLOCK_MIN_SIZE > buffer_size)
 		return NULL;
 
 	block = malloc(sizeof(*block));
