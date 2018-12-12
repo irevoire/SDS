@@ -21,6 +21,61 @@ const unsigned char base_picture[] = {
 	0xCA, 0xCA, 0xCA // PIXEL
 };
 
+const unsigned char base_block[] = {
+	// BLOCK DATA
+	0x01, // BLOCK TYPE DATA
+	0x01, 0x00, 0x00, 0x00, // BLOCK SIZE
+	0xFF, // PIXEL
+};
+
+//////////////////////////////////////////////////////////
+/////////////////// READ STIF BLOCK //////////////////////
+//////////////////////////////////////////////////////////
+START_TEST(read_stif_block_bad_buffer_size){
+	stif_block_t *block = NULL;
+	size_t size = 2;
+	block = read_stif_block(base_block, sizeof(base_block), &size);
+	ck_assert(block == NULL);
+	ck_assert(size == 2);
+}
+END_TEST
+
+//////////////////////////////////////////////////////////
+////////////////////// PARSE STIF ////////////////////////
+//////////////////////////////////////////////////////////
+START_TEST(parse_stif_not_null){
+	stif_t *stif = NULL;
+	stif = parse_stif(base_picture, sizeof(base_picture));
+	ck_assert(stif != NULL);
+	stif_free(stif);
+}
+END_TEST
+
+START_TEST(parse_stif_check_header){
+	stif_t *stif = NULL;
+	stif = parse_stif(base_picture, sizeof(base_picture));
+	ck_assert(stif != NULL);
+	ck_assert(stif->header.width == 2);
+	ck_assert(stif->header.height == 2);
+	ck_assert(stif->header.color_type == STIF_COLOR_TYPE_GRAYSCALE);
+	ck_assert(stif->grayscale_pixels != NULL);
+	ck_assert(stif->rgb_pixels == NULL);
+	stif_free(stif);
+}
+END_TEST
+
+START_TEST(parse_stif_check_pixels){
+	stif_t *stif = NULL;
+	stif = parse_stif(base_picture, sizeof(base_picture));
+	ck_assert(stif != NULL);
+	ck_assert(stif->grayscale_pixels[0] == base_picture[21]);
+	ck_assert(stif->grayscale_pixels[1] == base_picture[27]);
+	ck_assert(stif->grayscale_pixels[2] == base_picture[28]);
+	ck_assert(stif->grayscale_pixels[3] == base_picture[29]);
+	stif_free(stif);
+}
+END_TEST
+
 START_TEST(parse_stif_small_buffer){
 	ck_assert(parse_stif(base_picture, 1) == NULL);
 }
@@ -79,10 +134,17 @@ static Suite *parse_suite(void)
 
 	/* Core test case */
 	tc_core = tcase_create("Core");
+	
+	// parse_stif_block
+	tcase_add_test(tc_core, read_stif_block_bad_buffer_size);
 
-	tcase_add_test(tc_core, parse_stif_null_buffer);
+	// parse_stif
+	tcase_add_test(tc_core, parse_stif_not_null);
+	tcase_add_test(tc_core, parse_stif_check_header);
+	tcase_add_test(tc_core, parse_stif_check_pixels);
 	tcase_add_test(tc_core, parse_stif_small_buffer);
 	tcase_add_test(tc_core, parse_stif_no_magic);
+	tcase_add_test(tc_core, parse_stif_null_buffer);
 	tcase_add_test(tc_core, parse_stif_first_block_is_data);
 	tcase_add_test(tc_core, parse_stif_two_headers);
 	tcase_add_test(tc_core, parse_stif_inconsistent_pixel_size);
