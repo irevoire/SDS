@@ -18,14 +18,14 @@ LDFLAGS += -lcheck
 all: ${EXE}
 
 ${EXE}: ${OBJ} ${STIF_OBJ}
-	mkdir -p ${BINDIR}
-	${CC} -o $@ $^ ${LDFLAGS}
+	@mkdir -p ${BINDIR}
+	@${CC} -o $@ $^ ${LDFLAGS}
 
 ${OBJDIR}/%.o: %.c ${HDR} ${COMMON}
 	@mkdir -p ${OBJDIR}
 	@echo "[*] Building $@"
-	${CC} -o $@ -c $< ${CFLAGS}
+	@${CC} -o $@ -c $< ${CFLAGS}
 
 clean:
 	@echo "[*] Cleaning"
-	rm -rf ${LIB} ${OBJ} ${COVDIR}
+	@rm -rf ${LIB} ${OBJ} ${COVDIR}
