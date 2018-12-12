@@ -18,7 +18,7 @@ const unsigned char base_picture[] = {
 	// BLOCK DATA
 	0x01, // BLOCK TYPE DATA
 	0x03, 0x00, 0x00, 0x00, // BLOCK SIZE
-	0xCA, 0xCA, 0xCA // PIXEL
+	0xCA, 0xCB, 0xCC // PIXEL
 };
 
 const unsigned char base_block[] = {
