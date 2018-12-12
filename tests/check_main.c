@@ -40,6 +40,59 @@ START_TEST(read_stif_block_not_null){
 }
 END_TEST
 
+START_TEST(read_stif_block_increment_size){
+	stif_block_t *block = NULL;
+	size_t size = 0;
+	block = read_stif_block(base_block, sizeof(base_block), &size);
+	ck_assert(block != NULL);
+	ck_assert(size == (STIF_BLOCK_MIN_SIZE + (size_t)block->block_size));
+	stif_block_free(block);
+}
+END_TEST
+
+START_TEST(read_stif_block_check_type_DATA){
+	stif_block_t *block = NULL;
+	size_t size = 0;
+	block = read_stif_block(base_block, sizeof(base_block), &size);
+	ck_assert(block != NULL);
+	ck_assert(block->block_type == STIF_BLOCK_TYPE_DATA);
+	stif_block_free(block);
+}
+END_TEST
+
+START_TEST(read_stif_block_check_type_HEADER){
+	stif_block_t *block = NULL;
+	unsigned char buf[sizeof(base_block)];
+	memcpy(buf, base_block, sizeof(base_block));
+	buf[0] = 0x00; // block type = header
+	size_t size = 0;
+	block = read_stif_block(buf, sizeof(base_block), &size);
+	ck_assert(block != NULL);
+	ck_assert(block->block_type == STIF_BLOCK_TYPE_HEADER);
+	stif_block_free(block);
+}
+END_TEST
+
+START_TEST(read_stif_block_check_size){
+	stif_block_t *block = NULL;
+	size_t size = 0;
+	block = read_stif_block(base_block, sizeof(base_block), &size);
+	ck_assert(block != NULL);
+	ck_assert(block->block_size == 1);
+	stif_block_free(block);
+}
+END_TEST
+
+START_TEST(read_stif_block_check_pixel){
+	stif_block_t *block = NULL;
+	size_t size = 0;
+	block = read_stif_block(base_block, sizeof(base_block), &size);
+	ck_assert(block != NULL);
+	ck_assert(block->data[0] == base_block[5]);
+	stif_block_free(block);
+}
+END_TEST
+
 START_TEST(read_stif_block_bad_buffer_size){
 	stif_block_t *block = NULL;
 	size_t size = 2;
@@ -153,6 +206,11 @@ static Suite *parse_suite(void)
 	
 	// parse_stif_block
 	tcase_add_test(tc_core, read_stif_block_not_null);
+	tcase_add_test(tc_core, read_stif_block_increment_size);
+	tcase_add_test(tc_core, read_stif_block_check_type_DATA);
+	tcase_add_test(tc_core, read_stif_block_check_type_HEADER);
+	tcase_add_test(tc_core, read_stif_block_check_size);
+	tcase_add_test(tc_core, read_stif_block_check_pixel);
 	tcase_add_test(tc_core, read_stif_block_bad_buffer_size);
 	tcase_add_test(tc_core, read_stif_block_buffer_null);
 
