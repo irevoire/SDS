@@ -96,7 +96,6 @@ static int parse_stif_header(stif_header_t *header, stif_block_t *block)
 			break;
 		default:
 			return -1;
-			break;
 	}
 	return 0;
 }
@@ -146,8 +145,6 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 		stif->rgb_pixels = malloc(image_size);
 		pixel_progression = (unsigned char *)stif->rgb_pixels;
 	}
-	else
-		goto error;
 
 	for (stif_block_t *block = stif->block_head;
 			read < buffer_size;
@@ -161,8 +158,6 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 		memcpy(pixel_progression, block->next->data, (size_t)block->next->block_size);
 		pixel_progression += block->next->block_size;
 		pixel_read += (size_t)block->next->block_size;
-		if (block->next == NULL)
-			goto error;
 	}
 
 	if (image_size != pixel_read)
