@@ -37,11 +37,11 @@ stif_block_t *read_stif_block(const unsigned char *buffer, size_t buffer_size, s
 	block = malloc(sizeof(*block));
 
 	// GET THE TYPE
-	block->block_type = (int8_t)*(buffer + *bytes_read);
+	memcpy(&block->block_type, buffer + *bytes_read, sizeof(int8_t));
 	*bytes_read += 1;
 
 	// GET THE SIZE
-	block->block_size = *(int32_t *)(buffer + *bytes_read);
+	memcpy(&block->block_size, buffer + *bytes_read, sizeof(int32_t));
 	*bytes_read += 4;
 
 	// NOT ENOUGH BYTES TO READ
@@ -81,9 +81,9 @@ static int parse_stif_header(stif_header_t *header, stif_block_t *block)
 		return -1; // sizeof(stif_header_t) without padding
 
 	current = block->data;
-	header->width = *(int32_t *)current;
+	memcpy(&header->width, current, sizeof(int32_t));
 	current += 4;
-	header->height = *(int32_t *)current;
+	memcpy(&header->height, current, sizeof(int32_t));
 	current += 4;
 
 	switch(*current)
@@ -104,6 +104,7 @@ static int parse_stif_header(stif_header_t *header, stif_block_t *block)
 stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 {
 	size_t read = 0;
+	int16_t magic = 0;
 	unsigned char *pixel_progression = NULL;
 	size_t pixel_read = 0, image_size = 0;
 	stif_t *stif = NULL;
@@ -114,7 +115,8 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 	if (buffer_size < 2) // STIF_MAGIC
 		return NULL;
 
-	if ( ( *(int16_t *) buffer) != (int16_t) STIF_MAGIC)
+	memcpy(&magic, buffer, sizeof(int16_t));
+	if (magic != (int16_t)STIF_MAGIC)
 		return NULL;
 	read += 2;
 
