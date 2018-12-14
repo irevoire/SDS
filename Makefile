@@ -13,20 +13,17 @@ all:
 		$(MAKE) -C $$dir || exit ;\
 	done
 
-.PHONY: clean testu
+.PHONY: clean test all
 
 test: CFLAGS += --coverage -O0
 test: LDFLAGS += -fprofile-arcs -ftest-coverage
-test: all
+test: | clean all
 	./bin/check_main
-#	@for dir in ${SUBDIR} ; do \
-		for file in $$dir/*.c; do \
-			gcov $$dir/$$file -o ${OBJDIR}/$$file;\
-		done \
-	done
-#	lcov -d bin --zerocounters
-	lcov -d . -c -o report.info
-#	genhtml -o ./coverage report.info 
+	mkdir coverage
+	cp $$(find . -name "*.c") coverage/
+	mv $$(find . -name "*.gc*") coverage/
+	lcov -d . -c -o coverage/report.info
+	genhtml -o coverage coverage/report.info
 
 clean:
 	@echo "[*] Cleaning"
