@@ -1,11 +1,11 @@
 # src makefile
 
-BASE   = ..
-COMMON = ${BASE}/common.mk
-SRC    = $(wildcard *.c)
-HDR    = $(wildcard ${BASE}/include/*.h)
-OBJDIR = ${BASE}/obj/stif
-OBJ    = $(addprefix ${OBJDIR}/, $(patsubst %.c,%.o,$(SRC)))
+BASE   := ..
+COMMON := ${BASE}/common.mk
+SRC    := $(wildcard *.c)
+HDR    := $(wildcard ${BASE}/include/*.h)
+OBJDIR := ${BASE}/obj/src
+OBJ    := $(addprefix ${OBJDIR}/, $(patsubst %.c,%.o,$(SRC)))
 
 include ${COMMON}
 

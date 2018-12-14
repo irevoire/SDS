@@ -1,14 +1,14 @@
 # src makefile
 
-BASE     = ..
-COMMON   = ${BASE}/common.mk
-SRC      = $(wildcard  *.c)
-HDR      = $(wildcard  ${BASE}/include/*.h)
-OBJDIR   = ${BASE}/obj/regress
-OBJ      = $(addprefix ${OBJDIR}/, $(patsubst %.c,%.o,$(SRC)))
-STIF_OBJ = ${wildcard  ${BASE}/obj/stif/*.o}
-BINDIR   = ${BASE}/bin
-EXE      = ${BINDIR}/spcheck
+BASE     := ..
+COMMON   := ${BASE}/common.mk
+SRC      := $(wildcard  *.c)
+HDR      := $(wildcard  ${BASE}/include/*.h)
+OBJDIR   := ${BASE}/obj/regress
+OBJ      := $(addprefix ${OBJDIR}/, $(patsubst %.c,%.o,$(SRC)))
+STIF_OBJ := ${wildcard  ${BASE}/obj/src/*.o}
+BINDIR   := ${BASE}/bin
+EXE      := ${BINDIR}/spcheck
 
 include ${COMMON}
 
