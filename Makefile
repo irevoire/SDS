@@ -28,6 +28,7 @@ test: | clean all
 	@mv $$(find . -name "*.gc*") coverage/
 	@lcov -d . -c -o coverage/report.info
 	@genhtml -o coverage coverage/report.info
+	@echo "[*] A graphical coverage report is available in coverage/index.html"
 
 integration: all
 	@echo "[*] Checking all the checksum"
