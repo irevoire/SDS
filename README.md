@@ -24,7 +24,7 @@ Nous n'avons pas obtenu d'échec.
 Utilisation des librairies gcov et lcov.
 
 Pour générer la couverture de code on peut lancer `make test`.
-Ensuite en on peut ouvrir `coverage/index.html` pour accèder au rapport graphique de la couverture de code.
+Ensuite on peut ouvrir `coverage/index.html` pour accéder au rapport graphique de la couverture de code.
 
 ### Tests d'intégration
 
