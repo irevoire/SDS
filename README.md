@@ -35,11 +35,11 @@ Avec `make integration` on peut générer des checksums avec la nouvelle version
 
 ## Propositions d'amélioration du fichier 
 
-* Certains des types des différentes structures sont signés alors qu'ils ne devraient pas pouvoir être négatifs. Nous proposons donc de remplacer les `int32\_t` de `stif\_header\_s.width`, `stif\_header\_s.height`, `stif\_block\_s.block\_size` par des `uint32\_t`.
+* Certains des types des différentes structures sont signés alors qu'ils ne devraient pas pouvoir être négatifs. Nous proposons donc de remplacer les `int32_t` de `stif_header_s.width`, `stif_header_s.height`, `stif_block_s.block_size` par des `uint32_t`.
 
-* On pourrait remplacer les types existants pour les champs `stif\_header\_s.color\_type` et `stif\_block\_s.block\_type` par des champs de bits. Soit on force la taille du champ à 1 (`int block\_type : 1`), soit on supprime les flags `STIF\_BLOCK\_TYPE\_HEADER` et `STIF\_BLOCK\_TYPE\_DATA`, ainsi que `stif\_block\_s.block\_type`, pour les remplacer par 2 champs dans la structure `int type\_header : 1` et `int type\_data : 1`. 
+* On pourrait remplacer les types existants pour les champs `stif_header_s.color_type` et `stif_block_s.block_type` par des champs de bits. Soit on force la taille du champ à 1 (`int block_type : 1`), soit on supprime les flags `STIF_BLOCK_TYPE_HEADER` et `STIF_BLOCK_TYPE_DATA`, ainsi que `stif_block_s.block_type`, pour les remplacer par 2 champs dans la structure `int type_header : 1` et `int type_data : 1`. 
 
-* On pourrait faire une union anonyme entre les tableaux grayscale\_pixels et rgb\_pixels pour minimiser le risque d'erreur. Par exemple: 
+* On pourrait faire une union anonyme entre les tableaux `grayscale_pixels` et `rgb_pixels` pour minimiser le risque d'erreur. Par exemple: 
 
 ```c
 typedef struct stif_s
@@ -52,7 +52,7 @@ typedef struct stif_s
 	stif_block_t      *block_head;
 } stif_t;
 ```
-* Pour limiter le nombre de malloc et de free, on pourrait intégrer les data directement dans le stif_block_s plutôt que d'allouer de la mémoire pour les data séparément de la structure. Par exemple: 
+* Pour limiter le nombre de malloc et de free, on pourrait intégrer les data directement dans le `stif_block_s` plutôt que d'allouer de la mémoire pour les data séparément de la structure. Par exemple: 
 
 ```c
 typedef struct stif_block_s
