@@ -62,8 +62,11 @@ typedef struct stif_s
 	stif_header_t    header;
 	stif_block_t      *block_head;
 
+	// keep theses two pointer to stay compatible with old version
 	pixel_grayscale_t *grayscale_pixels;
 	pixel_rgb_t       *rgb_pixels;
+
+	unsigned char data[];
 } stif_t;
 
 /*!
