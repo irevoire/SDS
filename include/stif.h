@@ -44,9 +44,9 @@ typedef struct stif_block_s
 #define STIF_BLOCK_TYPE_DATA   1
 	int8_t  block_type;
 	int32_t block_size;
-	uint8_t *data;
-
 	struct stif_block_s *next;
+
+	uint8_t data[];
 } stif_block_t;
 
 typedef uint8_t pixel_grayscale_t;
@@ -60,9 +60,10 @@ typedef struct pixel_rgb_s {
 typedef struct stif_s
 {
 	stif_header_t    header;
+	stif_block_t      *block_head;
+
 	pixel_grayscale_t *grayscale_pixels;
 	pixel_rgb_t       *rgb_pixels;
-	stif_block_t      *block_head;
 } stif_t;
 
 /*!

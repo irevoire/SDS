@@ -17,6 +17,7 @@ void stif_free(stif_t *s)
 	if (s == NULL)
 		return;
 	free_all_blocks(s->block_head);
+
 	if (s->grayscale_pixels != NULL)
 		free(s->grayscale_pixels);
 	if (s->rgb_pixels != NULL)
@@ -28,35 +29,36 @@ void stif_free(stif_t *s)
 stif_block_t *read_stif_block(const unsigned char *buffer, size_t buffer_size, size_t *bytes_read)
 {
 	stif_block_t *block = NULL;
+	int8_t block_type;
+	int32_t block_size;
 
 	// NOT ENOUGH BYTES TO READ
 	if (*bytes_read + STIF_BLOCK_MIN_SIZE > buffer_size)
 		return NULL;
 
-	block = malloc(sizeof(*block));
-
 	// GET THE TYPE
-	memcpy(&block->block_type, buffer + *bytes_read, sizeof(int8_t));
+	memcpy(&block_type, buffer + *bytes_read, sizeof(int8_t));
 	*bytes_read += 1;
 
 	// GET THE SIZE
-	memcpy(&block->block_size, buffer + *bytes_read, sizeof(int32_t));
+	memcpy(&block_size, buffer + *bytes_read, sizeof(int32_t));
 	*bytes_read += 4;
 
 	// NOT ENOUGH BYTES TO READ
-	if (*bytes_read + (size_t)block->block_size > buffer_size)
-	{
-		free(block);
+	if (*bytes_read + (size_t)block_size > buffer_size)
 		return NULL;
-	}
+
+	block = malloc(sizeof(*block) + (uint32_t) block_size);
+	if (block == NULL)
+		return NULL;
+
+	block->block_type = block_type;
+	block->block_size = block_size;
+	block->next = NULL;
 
 	// GET THE DATA
-	block->data = malloc((size_t)block->block_size);
 	memcpy(block->data, buffer + *bytes_read, (size_t)block->block_size);
 	*bytes_read += (size_t)block->block_size;
-
-	// INIT NEXT
-	block->next = NULL;
 
 	return block;
 }
@@ -65,8 +67,6 @@ void stif_block_free(stif_block_t *b)
 {
 	if (b == NULL)
 		return;
-	if (b->data != NULL)
-		free(b->data);
 	free(b);
 }
 
@@ -154,7 +154,7 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 			goto error;
 		if (block->next->block_type != STIF_BLOCK_TYPE_DATA)
 			goto error;
-		memcpy(pixel_progression, block->next->data, (size_t)block->next->block_size);
+		memcpy(pixel_progression, &block->next->data, (size_t)block->next->block_size);
 		pixel_progression += block->next->block_size;
 		pixel_read += (size_t)block->next->block_size;
 	}
