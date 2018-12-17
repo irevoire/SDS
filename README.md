@@ -68,6 +68,11 @@ typedef struct stif_block_s
 
 // malloc(sizeof(stif_block_t)+block_size)
 ```
+
+Cette "amélioration" en plus de simplifier la gestions des allocations devrait permettre un accès plus rapide aux données des blocs.
+Plus on fait d'allocation plus on augmente les chances que le programme ne soit plus capable de mettre les données suffisamment proche dans la mémoire pour charger le `stif_bloc_t` et sa data en cache dans le CPU. Utiliser une structure comme définie au dessus permet de forcer a ce qu'un bloc et sa data soient toujours sauvegardé de manière contigue dans la mémoire et devrait rendre les accès plus rapide.
+
+
 ## Comportement suspect
 
 * Dans la fonction `read_stif_block`, si un bug apparait dans le second check d'erreur nous avons déjà incrémenté la variable `bytes_read`
