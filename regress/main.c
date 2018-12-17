@@ -105,6 +105,7 @@ static void dump_stif_image(const stif_t *s)
 
 	fprintf(stdout, "- block count: %d\n", block_count);
 
+	fprintf(stdout, "Dumping block:\n");
 	/* Dumping blocks
 	 */
 	block_count = 0;
@@ -131,6 +132,23 @@ static void dump_stif_image(const stif_t *s)
 		block_count++;
 		curr = curr->next;
 	}
+	/* Dumping Pixels
+	 */
+	fprintf(stdout, "\nDumping pixels:\n");
+	int32_t size = s->header.width * s->header.height;
+
+	for (int32_t i = 0; i < size; i++)
+	{
+		if (s->grayscale_pixels != NULL)
+			fprintf(stdout, "%.2x ", s->grayscale_pixels[i]);
+		else if (s->rgb_pixels != NULL)
+			fprintf(stdout, "%.2x %.2x %.2x",
+					s->rgb_pixels[i].red,
+					s->rgb_pixels[i].green,
+					s->rgb_pixels[i].blue);
+	}
+	fprintf(stdout, "\n");
+
 }
 
 static bool view_stif_image(const stif_t *s)
