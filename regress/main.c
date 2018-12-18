@@ -142,7 +142,7 @@ static void dump_stif_image(const stif_t *s)
 		if (s->grayscale_pixels != NULL)
 			fprintf(stdout, "%.2x ", s->grayscale_pixels[i]);
 		else if (s->rgb_pixels != NULL)
-			fprintf(stdout, "%.2x %.2x %.2x",
+			fprintf(stdout, "%.2x %.2x %.2x ",
 					s->rgb_pixels[i].red,
 					s->rgb_pixels[i].green,
 					s->rgb_pixels[i].blue);
