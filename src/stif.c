@@ -34,6 +34,8 @@ stif_block_t *read_stif_block(const unsigned char *buffer, size_t buffer_size, s
 		return NULL;
 
 	block = malloc(sizeof(*block));
+	if (block == NULL)
+		return NULL;
 
 	// GET THE TYPE
 	memcpy(&block->block_type, buffer + *bytes_read, sizeof(int8_t));
@@ -52,6 +54,8 @@ stif_block_t *read_stif_block(const unsigned char *buffer, size_t buffer_size, s
 
 	// GET THE DATA
 	block->data = malloc((size_t)block->block_size);
+	if (block->data == NULL)
+		return NULL;
 	memcpy(block->data, buffer + *bytes_read, (size_t)block->block_size);
 	*bytes_read += (size_t)block->block_size;
 
@@ -119,6 +123,8 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 	read += 2;
 
 	stif = malloc(sizeof(*stif));
+	if (stif == NULL)
+		return NULL;
 	stif->block_head = NULL;
 	stif->grayscale_pixels = NULL;
 	stif->rgb_pixels = NULL;
@@ -136,12 +142,16 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 	{
 		image_size = (size_t)(stif->header.width * stif->header.height) * sizeof(pixel_grayscale_t);
 		stif->grayscale_pixels = malloc(image_size);
+		if (stif->grayscale_pixels == NULL)
+			return NULL;
 		pixel_progression = stif->grayscale_pixels;
 	}
 	else if (stif->header.color_type == STIF_COLOR_TYPE_RGB)
 	{
 		image_size = (size_t)(stif->header.width * stif->header.height) * sizeof(pixel_rgb_t);
 		stif->rgb_pixels = malloc(image_size);
+		if (stif->rgb_pixels == NULL)
+			return NULL;
 		pixel_progression = (unsigned char *)stif->rgb_pixels;
 	}
 
@@ -154,9 +164,13 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 			goto error;
 		if (block->next->block_type != STIF_BLOCK_TYPE_DATA)
 			goto error;
+
+		pixel_read += (size_t)block->next->block_size;
+		if (pixel_read >= image_size)
+			goto error;
+
 		memcpy(pixel_progression, block->next->data, (size_t)block->next->block_size);
 		pixel_progression += block->next->block_size;
-		pixel_read += (size_t)block->next->block_size;
 	}
 
 	if (image_size != pixel_read)
