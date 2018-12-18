@@ -98,6 +98,18 @@ START_TEST(read_stif_block_not_null){
 }
 END_TEST
 
+START_TEST(read_stif_block_too_large_block_size){
+	stif_block_t *block = NULL;
+	unsigned char buf[sizeof(base_block)];
+	memcpy(buf, base_block, sizeof(base_block));
+	memset(&buf[1], -1, sizeof(int32_t));
+
+	size_t size = 0;
+	block = read_stif_block(buf, sizeof(base_block), &size);
+	ck_assert(block == NULL);
+}
+END_TEST
+
 START_TEST(read_stif_block_increment_size){
 	stif_block_t *block = NULL;
 	size_t size = 0;
@@ -219,6 +231,40 @@ START_TEST(parse_stif_null_buffer){
 }
 END_TEST
 
+START_TEST(parse_stif_too_large_pixel_amount_greyscale){
+	unsigned char picture[sizeof(base_picture)];
+	memcpy(picture, base_picture, sizeof(base_picture));
+	memset(&picture[7], 0xffff, sizeof(int32_t));
+	memset(&picture[11], 0xffff, sizeof(int32_t));
+	ck_assert(parse_stif(picture, sizeof(picture)) == NULL);
+}
+END_TEST
+
+START_TEST(parse_stif_too_large_pixel_amount_rgb){
+	unsigned char picture[sizeof(base_picture)];
+	memcpy(picture, base_picture, sizeof(base_picture));
+	memset(&picture[7], 0xffff, sizeof(int32_t));
+	memset(&picture[11], 0xffff, sizeof(int32_t));
+	ck_assert(parse_stif(picture, sizeof(picture)) == NULL);
+}
+END_TEST
+
+START_TEST(parse_stif_negative_width){
+	unsigned char picture[sizeof(base_rgb_picture)];
+	memcpy(picture, base_rgb_picture, sizeof(base_rgb_picture));
+	memset(&picture[7], -1, sizeof(int32_t));
+	ck_assert(parse_stif(picture, sizeof(picture)) == NULL);
+}
+END_TEST
+
+START_TEST(parse_stif_negative_height){
+	unsigned char picture[sizeof(base_rgb_picture)];
+	memcpy(picture, base_rgb_picture, sizeof(base_rgb_picture));
+	memset(&picture[11], -1, sizeof(int32_t));
+	ck_assert(parse_stif(picture, sizeof(picture)) == NULL);
+}
+END_TEST
+
 START_TEST(parse_stif_first_block_is_data){
 	unsigned char picture[sizeof(base_picture)];
 	memcpy(picture, base_picture, sizeof(base_picture));
@@ -309,6 +355,7 @@ static Suite *parse_suite(void)
 	tc_read_stif = tcase_create("read_stif");
 
 	tcase_add_test(tc_read_stif, read_stif_block_not_null);
+	tcase_add_test(tc_read_stif, read_stif_block_too_large_block_size);
 	tcase_add_test(tc_read_stif, read_stif_block_increment_size);
 	tcase_add_test(tc_read_stif, read_stif_block_check_type_DATA);
 	tcase_add_test(tc_read_stif, read_stif_block_check_type_HEADER);
@@ -327,6 +374,10 @@ static Suite *parse_suite(void)
 	tcase_add_test(tc_parse_stif, parse_stif_unknown_pixel_type);
 	tcase_add_test(tc_parse_stif, parse_stif_wrong_sized_header_block);
 	tcase_add_test(tc_parse_stif, parse_stif_not_null);
+	tcase_add_test(tc_parse_stif, parse_stif_negative_width);
+	tcase_add_test(tc_parse_stif, parse_stif_negative_height);
+	tcase_add_test(tc_parse_stif, parse_stif_too_large_pixel_amount_greyscale);
+	tcase_add_test(tc_parse_stif, parse_stif_too_large_pixel_amount_rgb);
 	tcase_add_test(tc_parse_stif, parse_stif_check_header);
 	tcase_add_test(tc_parse_stif, parse_stif_check_pixels);
 	tcase_add_test(tc_parse_stif, parse_stif_small_buffer);
