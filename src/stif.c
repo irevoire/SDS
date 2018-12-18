@@ -166,7 +166,7 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 			goto error;
 
 		pixel_read += (size_t)block->next->block_size;
-		if (pixel_read >= image_size)
+		if (pixel_read > image_size)
 			goto error;
 
 		memcpy(pixel_progression, block->next->data, (size_t)block->next->block_size);
