@@ -38,6 +38,8 @@ Nous avons utilisé Valgrind pour détecter les fuites mémoire: nous réalisati
 
 Par ailleurs, sur le temps total d'exécution du programme, 44% du temps est passé dans malloc, 25% dans memcpy et 10% dans free.
 
+![](callgrind_parse_stif.png)
+
 ## Propositions d'amélioration du fichier 
 
 * Certains des types des différentes structures sont signés alors qu'ils ne devraient pas pouvoir être négatifs. Nous proposons donc de remplacer les `int32_t` de `stif_header_s.width`, `stif_header_s.height`, `stif_block_s.block_size` par des `uint32_t`.
