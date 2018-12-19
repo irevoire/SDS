@@ -2,6 +2,9 @@
 
 # SDS TP stif
 
+Nous avons cherché à nous assurer que le programme n'arrivait pas à parser lorsque le fichier donné en entrée était corrompu/inconnu (plusieurs blocs header, des tailles hors borne, des types de pixels et de blocs inconnus...).
+Nous nous sommes également assurés qu'il n'y avait pas de fuite mémoire,  d'erreur de segmentation.
+
 ## Tests
 
 Lancer `make all_test` pour exécuter les tests unitaires et le calcul de couverture de tests associé, ainsi que les tests d'intégration.
@@ -75,8 +78,3 @@ typedef struct stif_block_s
 
 Cette "amélioration", en plus de simplifier la gestions des allocations, devrait permettre un accès plus rapide aux données des blocs.
 Plus on fait d'allocations, plus on augmente les chances que le programme ne soit plus capable de mettre les données suffisamment proches dans la mémoire pour charger le `stif_bloc_t` et sa data en cache dans le CPU. Utiliser une structure comme définie au dessus permet de forcer à ce qu'un bloc et sa data soient toujours sauvegardés de manière contigüe dans la mémoire et devrait rendre les accès plus rapides.
-
-
-## Comportement suspect
-
-* Dans la fonction `read_stif_block`, si un bug apparait dans le second check d'erreur nous avons déjà incrémenté la variable `bytes_read`
