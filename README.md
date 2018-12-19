@@ -18,10 +18,9 @@ Utilisation de la librairie AFL, avec exécution du fuzzing pendant 1h30. L'imag
 Nous n'avons pas obtenu d'échec.
 
 ### Couverture de code
-
-100% de couverture \\o/
-
 Utilisation des librairies gcov et lcov.
+
+Nous sommes au delà de 90% de couverture.
 
 Pour générer la couverture de code on peut lancer `make test`.
 Ensuite on peut ouvrir `coverage/index.html` pour accéder au rapport graphique de la couverture de code.
