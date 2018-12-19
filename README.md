@@ -33,6 +33,12 @@ Les tests d'intégration génèrent un checksum du résultat de la commande `spc
 Avec `make checksum` on peut regénérer les checksums de toutes les images stif.
 Avec `make integration` on peut générer des checksums avec la nouvelle version du programme et les comparer aux dernier checksums qui ont été calculés.
 
+## Détection des fuites mémoire et des goulots d'étranglement
+
+Nous avons utilisé Valgrind pour détecter les fuites mémoire: nous réalisations le même nombre de malloc et de free, pour des images viables et des images non viables.
+
+Par ailleurs, sur le temps total d'exécution du programme, 44% du temps est passé dans malloc, 25% dans memcpy et 10% dans free.
+
 ## Propositions d'amélioration du fichier 
 
 * Certains des types des différentes structures sont signés alors qu'ils ne devraient pas pouvoir être négatifs. Nous proposons donc de remplacer les `int32_t` de `stif_header_s.width`, `stif_header_s.height`, `stif_block_s.block_size` par des `uint32_t`.
