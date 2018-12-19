@@ -40,7 +40,7 @@ Nous avons utilisé Valgrind pour détecter les fuites mémoire: nous réalisati
 
 Par ailleurs, sur le temps total d'exécution du programme, 44% du temps est passé dans malloc, 25% dans memcpy et 10% dans free.
 
-![](Callgrind_parse_stif.png)
+![](callgrind_parse_stif.png)
 
 ## Propositions d'amélioration du fichier 
 
