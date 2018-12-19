@@ -137,15 +137,9 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 
 	// malloc the pixels array with a size appropriate for the type
 	if (stif->header.color_type == STIF_COLOR_TYPE_GRAYSCALE)
-	{
 		image_size *= sizeof(pixel_grayscale_t);
-		stif->grayscale_pixels = stif->data;
-	}
 	else if (stif->header.color_type == STIF_COLOR_TYPE_RGB)
-	{
 		image_size *= sizeof(pixel_rgb_t);
-		stif->rgb_pixels = (pixel_rgb_t *)stif->data;
-	}
 
 	stif = malloc(sizeof(*stif) + image_size);
 	if (stif == NULL)
@@ -153,6 +147,11 @@ stif_t *parse_stif(const unsigned char *buffer, size_t buffer_size)
 
 	*stif = tstif;
 	pixel_progression = stif->data;
+
+	if (stif->header.color_type == STIF_COLOR_TYPE_GRAYSCALE)
+		stif->grayscale_pixels = stif->data;
+	else if (stif->header.color_type == STIF_COLOR_TYPE_RGB)
+		stif->rgb_pixels = (pixel_rgb_t *)stif->data;
 
 	for (stif_block_t *block = stif->block_head;
 			read < buffer_size;
