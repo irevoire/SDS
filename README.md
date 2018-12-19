@@ -1,5 +1,4 @@
-### Campistron Thomas
-### Kaleba Sophie
+### Campistron Thomas et Kaleba Sophie
 
 # SDS TP stif
 
@@ -37,8 +36,6 @@ Avec `make integration` on peut générer des checksums avec la nouvelle version
 Nous avons utilisé Valgrind pour détecter les fuites mémoire: nous réalisations le même nombre de malloc et de free, pour des images viables et des images non viables.
 
 Par ailleurs, sur le temps total d'exécution du programme, 44% du temps est passé dans malloc, 25% dans memcpy et 10% dans free.
-
-![](callgrind_parse_stif.png)
 
 ## Propositions d'amélioration du fichier 
 
