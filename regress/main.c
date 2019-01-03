@@ -174,7 +174,7 @@ static bool view_stif_image(const stif_t *s)
 
 	/* White background
 	 */
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
 
 	/* Draw pixels
@@ -192,7 +192,7 @@ static bool view_stif_image(const stif_t *s)
 				assert(s->grayscale_pixels != NULL);
 				pixel = s->grayscale_pixels[i + j * s->header.width];
 
-				SDL_SetRenderDrawColor(renderer, pixel, pixel, pixel, 0);
+				SDL_SetRenderDrawColor(renderer, pixel, pixel, pixel, 255);
 				SDL_RenderDrawPoint(renderer, i, j);
 			}
 			else if ( s->header.color_type == STIF_COLOR_TYPE_RGB )
@@ -202,7 +202,7 @@ static bool view_stif_image(const stif_t *s)
 				assert(s->rgb_pixels != NULL);
 				pixel = s->rgb_pixels[i + j * s->header.width];
 
-				SDL_SetRenderDrawColor(renderer, pixel.red, pixel.green, pixel.blue, 0);
+				SDL_SetRenderDrawColor(renderer, pixel.red, pixel.green, pixel.blue, 255);
 				SDL_RenderDrawPoint(renderer, i, j);
 			}
 		}
