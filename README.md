@@ -1,7 +1,9 @@
-### Campistron Thomas
-### Kaleba Sophie
+### Campistron Thomas et Kaleba Sophie
 
 # SDS TP stif
+
+Nous avons cherché à nous assurer que le programme n'arrivait pas à parser lorsque le fichier donné en entrée était corrompu/inconnu (plusieurs blocs header, des tailles hors borne, des types de pixels et de blocs inconnus...).
+Nous nous sommes également assurés qu'il n'y avait pas de fuite mémoire,  d'erreur de segmentation.
 
 ## Tests
 
@@ -18,10 +20,9 @@ Utilisation de la librairie AFL, avec exécution du fuzzing pendant 1h30. L'imag
 Nous n'avons pas obtenu d'échec.
 
 ### Couverture de code
-
-100% de couverture \\o/
-
 Utilisation des librairies gcov et lcov.
+
+Nous sommes au delà de 90% de couverture.
 
 Pour générer la couverture de code on peut lancer `make test`.
 Ensuite on peut ouvrir `coverage/index.html` pour accéder au rapport graphique de la couverture de code.
@@ -32,6 +33,14 @@ Les tests d'intégration génèrent un checksum du résultat de la commande `spc
 
 Avec `make checksum` on peut regénérer les checksums de toutes les images stif.
 Avec `make integration` on peut générer des checksums avec la nouvelle version du programme et les comparer aux dernier checksums qui ont été calculés.
+
+## Détection des fuites mémoire et des goulots d'étranglement
+
+Nous avons utilisé Valgrind pour détecter les fuites mémoire: nous réalisations le même nombre de malloc et de free, pour des images viables et des images non viables.
+
+Par ailleurs, sur le temps total d'exécution du programme, 44% du temps est passé dans malloc, 25% dans memcpy et 10% dans free.
+
+![](callgrind_parse_stif.png)
 
 ## Propositions d'amélioration du fichier 
 
@@ -69,10 +78,5 @@ typedef struct stif_block_s
 // malloc(sizeof(stif_block_t)+block_size)
 ```
 
-Cette "amélioration" en plus de simplifier la gestions des allocations devrait permettre un accès plus rapide aux données des blocs.
-Plus on fait d'allocation plus on augmente les chances que le programme ne soit plus capable de mettre les données suffisamment proche dans la mémoire pour charger le `stif_bloc_t` et sa data en cache dans le CPU. Utiliser une structure comme définie au dessus permet de forcer a ce qu'un bloc et sa data soient toujours sauvegardé de manière contigue dans la mémoire et devrait rendre les accès plus rapide.
-
-
-## Comportement suspect
-
-* Dans la fonction `read_stif_block`, si un bug apparait dans le second check d'erreur nous avons déjà incrémenté la variable `bytes_read`
+Cette "amélioration", en plus de simplifier la gestions des allocations, devrait permettre un accès plus rapide aux données des blocs.
+Plus on fait d'allocations, plus on augmente les chances que le programme ne soit plus capable de mettre les données suffisamment proches dans la mémoire pour charger le `stif_bloc_t` et sa data en cache dans le CPU. Utiliser une structure comme définie au dessus permet de forcer à ce qu'un bloc et sa data soient toujours sauvegardés de manière contigüe dans la mémoire et devrait rendre les accès plus rapides.
